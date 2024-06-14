@@ -1,0 +1,36 @@
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+h1{
+    font-family: "Dancing Script", cursive;
+    font-size: 56px !important;
+    color: #F5E8DD;
+}
+
+/* Estilos generales */
+body {
+    font-family: Roboto, Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: radial-gradient(
+            circle,
+            rgba(40, 107, 90, 1) 15%,
+            rgba(33, 71, 62, 1) 60%
+    );
+}
+
+.row{
+    margin-inline: 0;
+    /* https://lenguajecss.com/css/modelo-de-cajas/propiedades-logicas-css/ */
+}
+
+/* Estilos del encabezado */
+header {
+    color: #fff;
+    padding-top: 12px;
+}
+
+footer {
+    background-color: #333;
+    color: #fff;
+    padding: 20px 0;
+}
