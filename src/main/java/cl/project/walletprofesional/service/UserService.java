@@ -1,6 +1,8 @@
 package cl.project.walletprofesional.service;
 
 import cl.project.walletprofesional.entity.User;
+import jakarta.transaction.Transactional;
+
 
 import java.util.List;
 import java.util.Optional;
@@ -12,6 +14,6 @@ public interface UserService {
     void deleteUserById(long id);
     User findByEmail(String email);
     User findByEmailAndPassword(String email, String password);
-    User getAttibute(String user);
     User updateUserBalance(User user, double amount);
+    boolean verifyPassword(String email, String rawPassword);
 }

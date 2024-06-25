@@ -1,15 +1,14 @@
 package cl.project.walletprofesional.service.impl;
 
 import cl.project.walletprofesional.entity.Transaction;
-import cl.project.walletprofesional.entity.TransactionType;
 import cl.project.walletprofesional.entity.User;
 import cl.project.walletprofesional.repository.TransactionRepository;
-import cl.project.walletprofesional.repository.UserRepository;
 import cl.project.walletprofesional.service.TransactionService;
 import cl.project.walletprofesional.service.UserService;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
+
+import java.sql.Timestamp;
 import java.util.List;
 
 
@@ -22,6 +21,12 @@ public class TransactionServiceImpl implements TransactionService {
     public TransactionServiceImpl(TransactionRepository transactionRepository, UserService userService) {
         this.transactionRepository = transactionRepository;
         this.userService = userService;
+    }
+
+    @Override
+    public List<Transaction> findTransactionsByUserId(Long userId) {
+        User user = userService.getUserById(userId);
+        return transactionRepository.findByUserOrderByTransactionDateDesc(user);
     }
 
     @Override
@@ -45,17 +50,13 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public List<Transaction> findTransactionsByUserId(long userId) {
-        return transactionRepository.findByUserUserId(userId);
-    }
-
-    @Override
     public void deposit(User user, double amount) {
         Transaction transaction = new Transaction();
         transaction.setUser(user);
         transaction.setAmount(amount);
-        transaction.setTransactionType("DEPOSIT");
-        transaction.setTransactionDate(new Date());
+        transaction.setTransactionType("DEPOSITO");
+        transaction.setTransactionDate(new Timestamp(
+                new java.util.Date().getTime()));
         transactionRepository.save(transaction);
 
         userService.updateUserBalance(user, amount);
@@ -67,8 +68,10 @@ public class TransactionServiceImpl implements TransactionService {
             Transaction transaction = new Transaction();
             transaction.setUser(user);
             transaction.setAmount(-amount);
-            transaction.setTransactionType("WITHDRAW");
-            transaction.setTransactionDate(new Date());
+            transaction.setTransactionType("RETIRO");
+            transaction.setTransactionDate(new Timestamp(
+                    new java.util.Date().getTime()
+            ));
             transactionRepository.save(transaction);
 
             userService.updateUserBalance(user, -amount);
@@ -84,8 +87,10 @@ public class TransactionServiceImpl implements TransactionService {
             Transaction sendTransaction = new Transaction();
             sendTransaction.setUser(sender);
             sendTransaction.setAmount(-amount);
-            sendTransaction.setTransactionType("TRANSFER");
-            sendTransaction.setTransactionDate(new Date());
+            sendTransaction.setTransactionType("TRANSFERENCIA");
+            sendTransaction.setTransactionDate(new Timestamp(
+                    new java.util.Date().getTime()
+            ));
             transactionRepository.save(sendTransaction);
 
             // Actualizar saldo del remitente
@@ -95,8 +100,10 @@ public class TransactionServiceImpl implements TransactionService {
             Transaction receiveTransaction = new Transaction();
             receiveTransaction.setUser(receiver);
             receiveTransaction.setAmount(amount);
-            receiveTransaction.setTransactionType("TRANSFER");
-            receiveTransaction.setTransactionDate(new Date());
+            receiveTransaction.setTransactionType("TRANSFERENCIA");
+            receiveTransaction.setTransactionDate(new Timestamp(
+                    new java.util.Date().getTime()
+            ));
             transactionRepository.save(receiveTransaction);
 
             // Actualizar saldo del receptor
