@@ -6,7 +6,9 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
-
+/**
+ * Configuration class for setting up JSP view resolver.
+ */
 @Configuration
 public class JspConfig {
 
@@ -17,7 +19,7 @@ public class JspConfig {
         viewResolver.setViewClass(JstlView.class);
         viewResolver.setViewNames("*.jsp");
         viewResolver.setPrefix("/WEB-INF/jsp/");
-        viewResolver.setSuffix("");
+        /*viewResolver.setSuffix("");*/
         return viewResolver;
     }
 }

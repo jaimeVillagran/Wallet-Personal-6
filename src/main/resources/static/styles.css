@@ -9,6 +9,8 @@ h1{
 /* Estilos generales */
 body {
     font-family: Roboto, Arial, sans-serif;
+    min-height: 100vh;
+    min-height: 100dvh;
     margin: 0;
     padding: 0;
     background: radial-gradient(
@@ -20,7 +22,11 @@ body {
 
 .row{
     margin-inline: 0;
-    /* https://lenguajecss.com/css/modelo-de-cajas/propiedades-logicas-css/ */
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
 }
 
 /* Estilos del encabezado */
