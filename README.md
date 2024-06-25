@@ -23,4 +23,9 @@ CREATE TABLE transactions (
     user_id INT NOT NULL,
     FOREIGN KEY (user_id) REFERENCES user(user_id) ON DELETE CASCADE
 );
+ALTER TABLE users MODIFY COLUMN account_non_expired BOOLEAN DEFAULT TRUE;
+ALTER TABLE users MODIFY COLUMN account_non_locked BOOLEAN DEFAULT TRUE;
+ALTER TABLE users MODIFY COLUMN credentials_non_expired BOOLEAN DEFAULT TRUE;
+ALTER TABLE users MODIFY COLUMN enabled BOOLEAN DEFAULT TRUE;
+
 ```
