@@ -1,18 +1,13 @@
 package cl.project.walletprofesional.controller;
 
-import cl.project.walletprofesional.entity.Transaction;
 import cl.project.walletprofesional.entity.User;
 import cl.project.walletprofesional.service.impl.TransactionServiceImpl;
 import cl.project.walletprofesional.service.impl.UserServiceImpl;
-/*import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;*/
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class BalanceController {
@@ -20,7 +15,8 @@ public class BalanceController {
     private final UserServiceImpl userServiceImpl;
     private final TransactionServiceImpl transactionService;
 
-    public BalanceController(UserServiceImpl userServiceImpl, TransactionServiceImpl transactionService) {
+    public BalanceController(UserServiceImpl userServiceImpl,
+                             TransactionServiceImpl transactionService) {
         this.userServiceImpl = userServiceImpl;
         this.transactionService = transactionService;
     }
@@ -32,12 +28,21 @@ public class BalanceController {
             model.addAttribute("error", "Debe iniciar sesión para acceder a esta página");
             return "redirect:/login.jsp";
         }
-        Double balance = user.getBalance();
-        List<Transaction> transactions = transactionService.findTransactionsByUserId(user.getUserId());
 
-        model.addAttribute("balance", balance);
-        model.addAttribute("transactions", transactions);
+        model.addAttribute("balance", user.getBalance());
+        return "balance.jsp";
+    }
 
+    @GetMapping("/balance/transactions")
+    public String getUserBalanceAndTransactions (@RequestParam("user_id") long userId, Model model) {
+        User user = userServiceImpl.getUserById(userId);
+        if (user == null) {
+            model.addAttribute("error", "Usuario no encontrado");
+            return "dashboard.jsp";
+        }
+
+        model.addAttribute("transactions", transactionService.findTransactionsByUserId(userId));
+        model.addAttribute("balance", user.getBalance());
         return "balance.jsp";
     }
 }

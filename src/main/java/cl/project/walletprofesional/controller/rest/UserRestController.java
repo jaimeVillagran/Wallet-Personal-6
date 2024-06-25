@@ -1,4 +1,4 @@
-package cl.project.walletprofesional.controller;
+package cl.project.walletprofesional.controller.rest;
 
 import cl.project.walletprofesional.entity.User;
 import cl.project.walletprofesional.service.UserService;

@@ -1,4 +1,4 @@
-package cl.project.walletprofesional.controller;
+package cl.project.walletprofesional.controller.rest;
 
 import cl.project.walletprofesional.entity.Transaction;
 import cl.project.walletprofesional.service.TransactionService;
