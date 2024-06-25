@@ -69,5 +69,4 @@ public class TransferController {
         }
         return showTransferForm(model, session); // Ensure the form is available again with success message
     }
-
 }

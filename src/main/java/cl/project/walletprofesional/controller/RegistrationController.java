@@ -2,6 +2,7 @@ package cl.project.walletprofesional.controller;
 
 import cl.project.walletprofesional.entity.User;
 import cl.project.walletprofesional.service.UserService;
+/*import org.springframework.security.crypto.password.PasswordEncoder;*/
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,9 +13,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class RegistrationController {
 
     private final UserService userService;
+    /*private final PasswordEncoder passwordEncoder;*/
 
-    public RegistrationController(UserService userService) {
+    public RegistrationController(UserService userService /*PasswordEncoder passwordEncoder*/) {
         this.userService = userService;
+        /*this.passwordEncoder = passwordEncoder;*/
     }
 
     @GetMapping("/register")
@@ -33,11 +36,11 @@ public class RegistrationController {
         user.setFirstname(firstName);
         user.setLastname(lastName);
         user.setEmail(email);
-        user.setPassword(password);
+        /*user.setPassword(passwordEncoder.encode(password)); // Encriptar la contraseña*/
+        user.setPassword(password); // Guardar la contraseña sin encriptar
         user.setBalance(0.0); // Inicializar balance con 0.0
 
         userService.saveUser(user);
-
         model.addAttribute("message", "Usuario registrado exitosamente");
         return "login.jsp"; // Redirigir al login después del registro
     }

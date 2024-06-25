@@ -7,16 +7,18 @@ import cl.project.walletprofesional.service.impl.UserServiceImpl;
 /*import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;*/
 import jakarta.servlet.http.HttpSession;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
+@Slf4j
 @Controller
+/*@RequestMapping("/transactions")*/
 public class TransactionController {
 
     private final TransactionServiceImpl transactionService;
@@ -34,10 +36,9 @@ public class TransactionController {
             model.addAttribute("error", "Debe iniciar sesión para acceder a esta página");
             return "redirect:/login.jsp";
         }
-
-        List<Transaction> transactions = transactionService.findTransactionsByUserId(user.getUserId());
+        // Convertir userId a Long
+        List<Transaction> transactions = transactionService.findTransactionsByUserId((long) user.getUserId());
         model.addAttribute("transactions", transactions);
-
         return "transactions.jsp"; // Asegúrate de tener esta vista
     }
 
@@ -50,16 +51,24 @@ public class TransactionController {
     public String deposit(@RequestParam("amount") double amount, HttpSession session, Model model) {
         User user = (User) session.getAttribute("user");
         if (user == null) {
+            log.warn("User not authenticated - redirecting to login");
             model.addAttribute("error", "Debe iniciar sesión para acceder a esta página");
-            return "/login.jsp";
+            return "login.jsp";
         }
-
+        if (amount <= 0) {
+            if (amount == 0) {
+                log.warn("Invalid deposit amount: {}", amount);
+                model.addAttribute("error", "No puede depositar un monto de 0");
+            } else {
+                log.warn("Invalid deposit amount: {}", amount);
+                model.addAttribute("error", "No puede realizar depósitos negativos");
+            }
+            return "deposit.jsp";
+        }
         transactionService.deposit(user, amount);
-        user = userServiceImpl.updateUserBalance(user, amount); // Actualiza el saldo del usuario
-        session.setAttribute("user", user);
-
-        model.addAttribute("message", "Depósito exitoso");
-        return "/dashboard.jsp";
+        log.info("Deposit successful for user: {}", user.getEmail());
+        model.addAttribute("message", "Depósito realizado con éxito");
+        return "deposit.jsp";
     }
 
     @GetMapping("/withdraw")
@@ -71,23 +80,36 @@ public class TransactionController {
     public String withdraw(@RequestParam("amount") double amount, HttpSession session, Model model) {
         User user = (User) session.getAttribute("user");
         if (user == null) {
+            log.warn("User not authenticated - redirecting to login");
             model.addAttribute("error", "Debe iniciar sesión para acceder a esta página");
-            return "/login.jsp";
+            return "login.jsp";
+        }
+        if (amount <= 0) {
+            if (amount == 0) {
+                log.warn("Invalid withdraw amount: {}", amount);
+                model.addAttribute("error", "No puede retirar un monto de 0");
+            } else {
+                log.warn("Invalid withdraw amount: {}", amount);
+                model.addAttribute("error", "No puede realizar retiros negativos");
+            }
+            return "withdraw.jsp";
         }
 
         boolean success = transactionService.withdraw(user, amount);
         if (success) {
             user = userServiceImpl.updateUserBalance(user, -amount); // Actualiza el saldo del usuario
             session.setAttribute("user", user);
-            model.addAttribute("message", "Retiro exitoso");
+            log.info("Withdraw successful for user: {}", user.getEmail());
+            model.addAttribute("message", "Retiro realizado con éxito");
         } else {
+            log.warn("Insufficient funds for user: {}", user.getEmail());
             model.addAttribute("error", "Fondos insuficientes");
         }
-
-        return "dashboard.jsp";
+        return "withdraw.jsp";
     }
 
-    /*@GetMapping("/user-dashboard")
+
+    @GetMapping("/user-dashboard")
     public String showDashboard(Model model, HttpSession session) {
         User user = (User) session.getAttribute("user");
         if (user == null) {
@@ -96,7 +118,7 @@ public class TransactionController {
         }
         model.addAttribute("user", user);
         return "dashboard.jsp"; // Asegúrate de tener esta vista
-    }*/
+    }
 
     @GetMapping("/transaction")
     public String getUserBalanceAndTransactions(@RequestParam("user_id") long userId, Model model) {
@@ -110,7 +132,5 @@ public class TransactionController {
             model.addAttribute("error", "Usuario no encontrado");
             return "dashboard.jsp"; // Asegúrate de tener esta vista
         }
-
-
     }
 }
