@@ -9,21 +9,21 @@
                rel="stylesheet"
                integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
                crossorigin="anonymous"/>
-               <link rel="stylesheet" crossorigin="" href="${pageContext.request.contextPath}/styles.css" type="text/css">
+               <link rel="stylesheet" cross origin="" href="${pageContext.request.contextPath}/styles.css" type="text/css">
     </head>
     <body class="d-flex flex-column min-vh-100">
-            <header class="row mt-5">
-                <h1 class= "text-center">Bienvenido a Wallet Profesional</h1>
-            </header>
-            <div class="container">
+        <header class="row mt-5">
+            <h1 class= "text-center">Bienvenido a Wallet Profesional</h1>
+        </header>
+            <div class="container mt-5">
                 <div class="container-main row justify-content-center">
-                    <div class="col-md-6">
-                            <p class="text-center mt-5">Tu aplicación confiable para gestionar transacciones financieras de manera segura y eficiente.</p>
-                        <div class="row justify-content-center mt-3">
-                            <div class="btn btn-success" >
-                                <a styles="text-decoratiom:none;" href= "<c:url value='/login' />">Iniciar Sesión</a>
+                    <div class="col-md-5">
+                        <h3 class="text-center mt-5">Tu aplicación confiable para gestionar transacciones financieras de manera segura y eficiente.</h3>
+                        <p class="text-center mt-5">Inicia sesión o regístrate para comenzar a gestionar tus fondos.</p>
+                            <div class="btn btn-success mb-2" >
+                                <a href= "<c:url value='/login' />">Iniciar Sesión</a>
                             </div>
-                            <div class="btn btn-success mt-2" >
+                            <div class="btn btn-success mb-2" >
                                 <a href="<c:url value='/register' />">Crear Usuario</a>
                             </div>
                         </div>
