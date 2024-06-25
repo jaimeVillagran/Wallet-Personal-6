@@ -1,6 +1,7 @@
 package cl.project.walletprofesional.repository;
 
 import cl.project.walletprofesional.entity.Transaction;
+import cl.project.walletprofesional.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -8,5 +9,5 @@ import java.util.List;
 
 @Repository
 public interface TransactionRepository extends JpaRepository<Transaction, Long> {
-    List<Transaction> findByUserUserId(long userId);
+    List<Transaction> findByUserOrderByTransactionDateDesc(User user);
 }
